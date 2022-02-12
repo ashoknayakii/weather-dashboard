@@ -34,7 +34,7 @@ var formSubmitHandler = function (event) {
 
 var getCityInfo = function (cityName) {
 
-var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=${cityName}&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no"
+var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=" + cityName + "&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no"
 
 fetch(citySearch)
 .then(function (response) {
