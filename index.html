@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Document</title>
 </head>
 <body>
@@ -12,18 +12,35 @@
         <h1>Weather Dashboard</h1>
     </header>
     <main>
+        <!--Search City Section-->
         <aside>
+            <form id="city-form">
             <h1>Search for a City:</h1>
-            
+            <input id="input-city" name="city-name" placeholder="Enter a city here" class="form-input" type="text"/>
+            <button type="submit" class="btn"><strong>Search</strong></button>
+        </form>
+        <!--List of Past Searches-->
+        <div>
+            <ul>
+
+            </ul>
+        </div> 
         </aside>
+        <!--Search Result Container-->
+        <section id="result-container" class="results">
+            <div>
+                <h1></h1>
+                <ul></ul>
+            </div>
+        </section>
+        <!--5 day Forecast Section-->
+        <article class="fiveday-container">
+            <h2>5-Day Forecast:</h2>
+            <div id="fivedaycolumns">
 
-
-
-
+            </div>
+        </article>
     </main>
-
-    
-
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
