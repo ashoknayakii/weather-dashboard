@@ -6,7 +6,8 @@
 
 var cityFormEl = document.querySelector("#city-form");
 var inputCityEl = document.querySelector("#input-city");
-
+var resultContainerEl = document.querySelector("#result-container");
+var historyContainerEl = document.querySelector("#history-container");
 
 
 //---Functions---//
@@ -27,30 +28,78 @@ var formSubmitHandler = function (event) {
 };
 
 
-
-
-
 // Create a getCityInfo function using a fetch from the open weather api then console log the response to check//
 
 var getCityInfo = function (cityName) {
 
-var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=" + cityName + "&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no"
+var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=" + cityName + "&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no";
+console.log(citySearch);
+// fetch(citySearch)
+// .then(function (response) {
+//     var cityInfo = response.json();
+//     console.log(cityInfo);
+//     return
+//     // response.json();
+// })
+
+// .then(function (data) {
+//     // console.log();
+//     // console.log("Data:", data);
+// })
+// .catch(function(error) {
+//     alert("Unable to connect to WeatherAPI")
+// });
+
+// }
 
 fetch(citySearch)
-.then(function (response) {
-    console.log("response");
-    return response.json();
+.then(function(response) {
+    if(response.ok) {
+        console.log(response);
+        response.json().then(function(data){
+            console.log(data);
+            displaycityInfo(data);
+        });
+    } else {
+        alert("Error: City Not Found!")
+    }
 })
-.then(function (data) {
-    console.log();
-    console.log("Data:", data);
-})
+
 .catch(function(error) {
-    alert("Unable to connect to WeatherAPI")
+    alert("Unable to connect to the Server");
 });
 
+};
+
+var displayCityInfo = function(data) {
+
+    if (data.length === 0) {
+        alert("No cities found under that name.  Try a new search.");
+        return;
+    }
 }
 
+var cityName = data.location.name
+var currentDate = data.location.localtime
+var tempEl = data.current.tempf
+var windMph =  data.current.windmph
+var humidity = data.current.humidity
+var uvindex = data.current.uv
+
+
+
+resultContainerEl.innerHTML = "cityName"
+
+// Create elements from the JSON object
+
+
+
+// Populate Search Results Container 
+
+// var cityEl = document.createElement("h1");
+// cityEl.setAttribute("location", "name");
+// cityEl.textContent = data.location.name;
+// resultContainer.appendChild(cityEl);
 
 
 
