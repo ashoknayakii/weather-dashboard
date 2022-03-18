@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <h1>Weather Dashboard</h1>
+    <header class="row">
+        <div class="col-12">
+        <h1 class="text-center p-3 mb-2 grad1 text-white font-weight-bold">Weather Dashboard</h1>
+    </div>
     </header>
-    <main>
+    <main class="row">
         <!--Search City Section-->
-        <aside>
+        <aside class="col-12 col-lg-3 flex-column m-3">
             <form id="city-form">
-            <h1>Search for a City:</h1>
-            <input id="input-city" name="city-name" placeholder="Enter a city here" class="form-input" type="text"/>
-            <button type="submit" class="btn"><strong>Search</strong></button>
+            <h3 class="h3. Bootstrap heading font-weight-bold">Search for a City:</h3>
+            <input id="input-city" name="city-name" placeholder="Enter a city here" class="form-input input-group mb-3" type="text"/>
+            <button type="submit" class="btn btn-primary btn-block" id="submit-btn"><strong>Search</strong></button>
         </form>
         <!--List of Past Searches-->
         <div id="history-container">
@@ -27,13 +31,13 @@
         </div> 
         </aside>
         <!--Search Result Container-->
-        <section id="result-container" class="results">
-            <div>
+        <section id="result-container" class="container col-12 col-lg-9 flex-column m-3">
+            <div class="border border-3 p-2">
                 <ul></ul>
             </div>
         </section>
         <!--5 day Forecast Section-->
-        <article class="fiveday-containers">
+        <article id="fiveday-containers" class="d-flex justify-content-around flex-wrap">
             <h2>5-Day Forecast:</h2>
             <div id="fivedaycolumns">
 
