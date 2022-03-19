@@ -42,26 +42,11 @@ var getCityInfo = function (cityName) {
     var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=" + cityName + "&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no";
     console.log(citySearch);
 
-
-
     fetch(citySearch)
         .then(function (response) {
             if (response.ok) {
                 console.log(response);
                 response.json().then(function (data) {
-
-
-                    //Change html, or add weather using javascript
-                    //document.getElementById("").innerText("response.data.long")
-                    
-                    // let cityNameEl = document.createElement("h3");
-                    
-                    // cityNameEl.textContent = cityName;
-
-                    
-
-
-
 
                     console.log(data);
                     displayCityInfo(data);
@@ -71,13 +56,9 @@ var getCityInfo = function (cityName) {
             }
         })
 
-
-
         .catch(function (error) {
             alert("Unable to connect to the Server");
         });
-
-
 
 };
 
@@ -93,7 +74,66 @@ var displayCityInfo = function (data) {
     console.log(cityName);
     cityHeader.innerText = cityName;
     resultsContainerEl.appendChild(cityHeader);
+
+    let tempF = document.createElement("li");
+    let currentTemp = data.current.temp_f;
+    console.log(currentTemp);
+    tempF.innerText = currentTemp;
+    resultsContainerEl.appendChild(tempF);
+
+    let windMPH = document.createElement("li")
+    let currentWind = data.current.wind_mph
+    console.log(currentWind);
+    windMPH.innerText = currentWind;
+    resultsContainerEl.appendChild(windMPH);
+
+    let humidity = document.createElement("li")
+    let currentHumidity = data.current.humidity
+    console.log(currentHumidity);
+    humidity.innerText = currentHumidity;
+    resultsContainerEl.appendChild(humidity);
+
+    let uvIndex = document.createElement("li")
+    let currentUVI = data.current.uv
+    console.log(currentUVI);
+    uvIndex.innerText = currentUVI;
+    resultsContainerEl.appendChild(uvIndex);
+
+    
 }
+
+var getCityForecast = function(cityName) {
+
+    var forecastSearch = "https://api.weatherapi.com/v1/forecast.json?key=aef924f407e147739a530214221202&q=" + cityName + "&days=5&aqi=no&alerts=no";
+    console.log(forecastSearch)
+
+    fetch(forecastSearch)
+        .then(function (response) {
+            if (response.ok) {
+                console.log(response);
+                response.json().then(function (data) {
+
+                    console.log(data);
+                    // displayCityForecast(data);
+                });
+            } else {
+                alert("Error: City Not Found!")
+            }
+        })
+
+        .catch(function (error) {
+            alert("Unable to connect to the Server");
+        });
+
+};
+
+
+getCityForecast();
+
+
+
+
+
 
 
 
