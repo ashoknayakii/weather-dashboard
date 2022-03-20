@@ -102,7 +102,7 @@ var displayCityInfo = function (data) {
     let cityHeader = document.createElement("h3");
     cityHeader.innerText = cityName + "( " + today + " )" + cityWeatherIcon;
     resultsContainerEl.appendChild(cityHeader);
-    
+
     let tempF = document.createElement("li");
     let currentTemp = data.current.temp;
     console.log(currentTemp);
@@ -127,18 +127,89 @@ var displayCityInfo = function (data) {
     uvIndex.innerText = currentUVI;
     resultsContainerEl.appendChild(uvIndex);
 
+    displayCityForecast(data);
+
 };
+
 
 var displayCityForecast = function (data) {
 
     let dailyData = data.daily
-    console.log(data.daily[i]);
+    console.log(dailyData)
+
+    for (let i = 1; i < 6; i++) {
+
+        let forecastID = data.daily[i].dt;
+        let forecastDate = new Date(forecastID * 1000);
+        let forecastDay = forecastDate.getDate();
+        let forecastMonth = forecastDate.getMonth() + 1;
+        let forecastYear = forecastDate.getFullYear();
+
+
+        // Create Elements to House 5 Day Forecast
+ 
+        let forecastEl = document.createElement("div");
+        forecastEl.classList = "d-inline-flex flex-wrap";
+
+        let forecastCards = document.createElement("div");
+        forecastCards.classList = "card text-white bg-dark-blue m-2 p0";
+
+        let forecastDetails = document.createElement("ul")
+        forecastDetails.classList = "unstyled list p-3"
+
+        // Populate 5-day Forecast Cards
+
+        let forecastCardDate = document.createElement("li")
+        forecastCardDate.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+        forecastCards.appendChild(forecastCardDate);
+
+
+        // Icon Element for Forecast Card
+
+
+
+        // Temp
+
+        let tempForecast = document.createElement("li");
+        let forecastTemp = data.daily[i].temp;
+        console.log(tempForecast);
+        tempF.innerHTML = "Temp: " + currentTemp + "&#176F";
+        forecastCards.appendChild(tempForecast);
+
+
+        // Humidity
+
+        let humidityForecast = document.createElement("li")
+        let forecastHumidity = data.daily[i].humidity
+        console.log(humidityForecast);
+        humidity.innerHTML = "Humidity: " + currentHumidity + "%";
+        forecastCards.appendChild(humidityForecast);
+
+        // Wind
+
+        let windForecast = document.createElement("li")
+        let forecastWind = data.daily[i].wind_speed
+        console.log(windForecast);
+        windMPH.innerHTML = "Wind: " + currentWind + "MPH";
+        forecastCards.appendChild(windForecast);
 
 
 
 
 
-}
+
+
+
+    }
+
+
+
+
+
+
+};
+
+
 
 
 

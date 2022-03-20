@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,33 +10,35 @@
     <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Document</title>
 </head>
+
 <body>
     <header class="row">
         <div class="col-12">
-        <h1 class="text-center p-3 mb-2 grad1 text-white font-weight-bold">Weather Dashboard</h1>
-    </div>
+            <h1 class="text-center p-3 mb-2 grad1 text-white font-weight-bold">Weather Dashboard</h1>
+        </div>
     </header>
     <main class="row">
         <!--Search City Section-->
         <aside class="col-12 col-lg-3 flex-column m-3">
             <form id="city-form">
-            <h3 class="h3. Bootstrap heading font-weight-bold">Search for a City:</h3>
-            <input id="input-city" name="city-name" placeholder="Enter a city here" class="form-input input-group mb-3" type="text"/>
-            <button type="submit" class="btn btn-primary btn-block" id="submit-btn"><strong>Search</strong></button>
-        </form>
-        <!--List of Past Searches-->
-        <div id="history-container">
-            <ul>
+                <h3 class="h3. Bootstrap heading font-weight-bold">Search for a City:</h3>
+                <input id="input-city" name="city-name" placeholder="Enter a city here"
+                    class="form-input input-group mb-3" type="text" />
+                <button type="submit" class="btn btn-primary btn-block" id="submit-btn"><strong>Search</strong></button>
+            </form>
+            <!--List of Past Searches-->
+            <div id="history-container">
+                <ul>
 
-            </ul>
-        </div> 
+                </ul>
+            </div>
         </aside>
         <!--Search Result Container-->
         <section class="container col-12 col-lg-9 flex-column m-3 border border-3 p-2">
             <div id="result-container">
                 <h3></h3><img id="city-weather-icon">
                 <ul>
-                    
+
                 </ul>
             </div>
         </section>
@@ -47,6 +50,11 @@
             </div>
         </article>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
