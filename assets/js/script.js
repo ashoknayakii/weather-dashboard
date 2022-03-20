@@ -8,12 +8,14 @@ var cityFormEl = document.querySelector("#city-form");
 var inputCityEl = document.querySelector("#input-city");
 var resultsContainerEl = document.querySelector("#result-container");
 var historyContainerEl = document.querySelector("#history-container");
+let cityWeatherIconEl = document.querySelector("#city-weather-icon");
 // var cityNameEl = document.querySelector("#city-name");
-var tempEl = document.querySelector("#temperatureF");
-var humidity = document.querySelector("#humidity");
-var windMPH = document.querySelector("#wind");
-var uvIndex = document.querySelector("#uv-index");
+// var tempEl = document.querySelector("#temperatureF");
+// var humidity = document.querySelector("#humidity");
+// var windMPH = document.querySelector("#wind");
+// var uvIndex = document.querySelector("#uv-index");
 var forecastEl = document.querySelector("#fivedaycolumns");
+
 
 
 
@@ -23,11 +25,11 @@ var forecastEl = document.querySelector("#fivedaycolumns");
 
 var formSubmitHandler = function (event) {
     event.preventDefault();
-    var cityName = inputCityEl.value.trim();
+    let cityName = inputCityEl.value.trim();
 
     if (cityName) {
         getCityInfo(cityName);
-        inputCityEl.value = "";
+
 
     } else {
         alert("Please enter a valid city name");
@@ -37,125 +39,114 @@ var formSubmitHandler = function (event) {
 
 // Create a getCityInfo function using a fetch from the open weather api then console log the response to check//
 
-var getCityInfo = function (cityName) {
 
-    var citySearch = "https://api.weatherapi.com/v1/current.json?key=aef924f407e147739a530214221202&q=" + cityName + "&date&temp_f&condition:text&condition:icon&wind_mph&humidity&uv&days=5&aqi=no";
-    console.log(citySearch);
+var getCityInfo = function (cityName) {
+    console.log(cityName);
+
+    var apiKey = `23063d416b2ee9cce627a00bf1093a71`
+    var citySearch = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`
 
     fetch(citySearch)
         .then(function (response) {
             if (response.ok) {
-                console.log(response);
                 response.json().then(function (data) {
 
                     console.log(data);
-                    displayCityInfo(data);
+                    var cityForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${apiKey}`
+
+                    fetch(cityForecast)
+                        .then(function (response) {
+                            if (response.ok) {
+                                response.json().then(function (data) {
+                                    console.log(data);
+                                    displayCityInfo(data);
+                                })
+                            }
+                        })
                 });
             } else {
                 alert("Error: City Not Found!")
             }
         })
-
         .catch(function (error) {
             alert("Unable to connect to the Server");
         });
-
 };
 
+
+
 var displayCityInfo = function (data) {
+
+    let cityName = inputCityEl.value.trim();
+    inputCityEl.value = "";
+
 
     if (data.length === 0) {
         alert("No cities found under that name.  Try a new search.");
         return;
     }
 
-    let cityHeader = document.createElement("h3");
-    let cityName = data.location.name;
-    console.log(cityName);
-    cityHeader.innerText = cityName;
-    resultsContainerEl.appendChild(cityHeader);
+    let today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
 
+    today = mm + '/' + dd + '/' + yyyy;
+
+    let cityWeatherIcon = data.current.weather[0].icon;
+    cityWeatherIconEl.setAttribute("src", "https://openweathermap.org/img/w/" + cityWeatherIcon + ".png");
+    resultsContainerEl.appendChild(cityWeatherIconEl);
+
+    console.log(cityWeatherIcon);
+
+    let cityHeader = document.createElement("h3");
+    cityHeader.innerText = cityName + "( " + today + " )" + cityWeatherIcon;
+    resultsContainerEl.appendChild(cityHeader);
+    
     let tempF = document.createElement("li");
-    let currentTemp = data.current.temp_f;
+    let currentTemp = data.current.temp;
     console.log(currentTemp);
-    tempF.innerText = currentTemp;
+    tempF.innerHTML = "Temp: " + currentTemp + "&#176F";
     resultsContainerEl.appendChild(tempF);
 
     let windMPH = document.createElement("li")
-    let currentWind = data.current.wind_mph
+    let currentWind = data.current.wind_speed
     console.log(currentWind);
-    windMPH.innerText = currentWind;
+    windMPH.innerHTML = "Wind: " + currentWind + "MPH";
     resultsContainerEl.appendChild(windMPH);
 
     let humidity = document.createElement("li")
     let currentHumidity = data.current.humidity
     console.log(currentHumidity);
-    humidity.innerText = currentHumidity;
+    humidity.innerHTML = "Humidity: " + currentHumidity + "%";
     resultsContainerEl.appendChild(humidity);
 
     let uvIndex = document.createElement("li")
-    let currentUVI = data.current.uv
+    let currentUVI = data.current.uvi
     console.log(currentUVI);
     uvIndex.innerText = currentUVI;
     resultsContainerEl.appendChild(uvIndex);
 
-    
-}
-
-var getCityForecast = function(cityName) {
-
-    var forecastSearch = "https://api.weatherapi.com/v1/forecast.json?key=aef924f407e147739a530214221202&q=" + cityName + "&days=5&aqi=no&alerts=no";
-    console.log(forecastSearch)
-
-    fetch(forecastSearch)
-        .then(function (response) {
-            if (response.ok) {
-                console.log(response);
-                response.json().then(function (data) {
-
-                    console.log(data);
-                    // displayCityForecast(data);
-                });
-            } else {
-                alert("Error: City Not Found!")
-            }
-        })
-
-        .catch(function (error) {
-            alert("Unable to connect to the Server");
-        });
-
 };
 
+var displayCityForecast = function (data) {
 
-getCityForecast();
-
-
-
-
+    let dailyData = data.daily
+    console.log(data.daily[i]);
 
 
 
 
 
+}
 
 
 
 
 
-// cityNameEl.innerHTML = "<h1>" + location.name + "</h1>" 
-// resultContainerEl.appendChild(cityNameEl)
-
-// Create elements from the JSON object
 
 
 
-// Populate Search Results Container 
-
-// var cityEl = document.createElement("h1");
-// cityEl.setAttribute("location", "name");
-// cityEl.textContent = data.location.name;
-// resultContainer.appendChild(cityEl);
 
 
 
