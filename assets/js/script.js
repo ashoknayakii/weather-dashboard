@@ -9,11 +9,6 @@ let inputCityEl = document.querySelector("#input-city");
 let resultsContainerEl = document.querySelector("#result-container");
 let historyContainerEl = document.querySelector("#history-container");
 let cityWeatherIconEl = document.querySelector("#city-weather-icon");
-// var cityNameEl = document.querySelector("#city-name");
-// var tempEl = document.querySelector("#temperatureF");
-// var humidity = document.querySelector("#humidity");
-// var windMPH = document.querySelector("#wind");
-// var uvIndex = document.querySelector("#uv-index");
 let forecastEl = document.querySelector("#fivedaycolumns");
 let citySearchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
 let clearBtn = document.querySelector("#clear-btn");
@@ -21,30 +16,29 @@ console.log(citySearchHistory);
 
 //---Functions---//
 
-// Create formsubmithandler function//
+// Create a Form Submit Handler function//
 
 const formSubmitHandler = function (event) {
     event.preventDefault();
     let cityName = inputCityEl.value.trim();
 
+
     if (cityName) {
+        
         getCityInfo(cityName);
-
+        
         // Clear Past Content
-
-        resultsContainerEl.innerHTML = "";
-        forecastEl.innerHTML = "";
 
     } else {
         alert("Please enter a valid city name");
     }
 };
 
-// Create a getCityInfo function using a fetch from the open weather api then console log the response to check//
-
+// Create a getCityInfo function to fetch from the open weather api then console log the response to check//
 
 const getCityInfo = function (cityName) {
-    console.log(cityName);
+    resultsContainerEl.innerHTML = "";
+    forecastEl.innerHTML = "";
 
     var apiKey = `23063d416b2ee9cce627a00bf1093a71`
     var citySearch = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`
@@ -64,7 +58,6 @@ const getCityInfo = function (cityName) {
                                     console.log(data);
                                     displayCityInfo(data);
                                     saveCityName(cityName);
-                                    displaySearchHistory();
                                 })
                             }
                         })
@@ -82,22 +75,17 @@ const getCityInfo = function (cityName) {
 // Save City to Local Storage
 
 const saveCityName = function (cityName) {
-
-    let duplicateCity = false;
-    for (let i = 0; i < citySearchHistory.length; i++) {
-        if(citySearchHistory[i] === cityName){
-            duplicateCity = true;
-            break;
-        }
-        
-    }
-    if(!duplicateCity) {
+    
+    if (citySearchHistory.includes(cityName)) {
+        return 
+    } else {
         citySearchHistory.push(cityName);
-        localStorage.setItem("cityName", JSON.stringify(citySearchHistory));
-        console.log("cityName", citySearchHistory[i]);
+            localStorage.setItem("cityName", JSON.stringify(citySearchHistory));
     }
 
 };
+
+// Display Cities Previously Searched in a Button Element
 
 const displaySearchHistory = function () {
     historyContainerEl.innerHTML = "";
@@ -111,6 +99,8 @@ const displaySearchHistory = function () {
         searchHistoryEl.textContent = citySearchHistory[i];
         console.log("city button", searchHistoryEl.value);
         searchHistoryEl.addEventListener("click", function(){
+            resultsContainerEl.innerHTML = "";
+            forecastEl.innerHTML = "";
             console.log("Search History Button Clicked!", searchHistoryEl.value);
             selectedCity = this.value;
             getCityInfo(selectedCity);
@@ -118,14 +108,15 @@ const displaySearchHistory = function () {
         });
         historyContainerEl.appendChild(searchHistoryEl);
     }
+};
 
-}
+// Create Function to Display Fetched Data to the Result Container
 
 const displayCityInfo = function (data) {
+    console.log(data);
 
     let cityName = inputCityEl.value.trim();
     inputCityEl.value = "";
-
 
     if (data.length === 0) {
         alert("No cities found under that name.  Try a new search.");
@@ -140,13 +131,15 @@ const displayCityInfo = function (data) {
     today = mm + '/' + dd + '/' + yyyy;
 
     let cityWeatherIcon = data.current.weather[0].icon;
+    let iconEl = document.createElement("img");
     cityWeatherIconEl.setAttribute("src", "https://openweathermap.org/img/w/" + cityWeatherIcon + ".png");
+    iconEl.classList = "mt-2";
     resultsContainerEl.appendChild(cityWeatherIconEl);
 
     console.log(cityWeatherIcon);
 
     let cityHeader = document.createElement("h3");
-    cityHeader.innerText = cityName + "( " + today + " )" + cityWeatherIcon;
+    cityHeader.innerText = cityName + "( " + today + " )" 
     resultsContainerEl.appendChild(cityHeader);
 
     let tempF = document.createElement("li");
@@ -177,11 +170,14 @@ const displayCityInfo = function (data) {
 
 };
 
+// Function to Display a 5 day City Forecast
 
 const displayCityForecast = function (data) {
 
     let dailyData = data.daily
     console.log(dailyData)
+
+    // For Loop that Starts on the following day Retrieved
 
     for (let i = 1; i < 6; i++) {
 
@@ -206,10 +202,15 @@ const displayCityForecast = function (data) {
         let forecastCardDate = document.createElement("li")
         forecastCardDate.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
         forecastDetails.appendChild(forecastCardDate);
+
         // Icon Element for Forecast Card
 
+        // let cityWeatherIcon = data.current.weather[0].icon;
+        // let iconEl = document.createElement("img");
+        // cityWeatherIconEl.setAttribute("src", "https://openweathermap.org/img/w/" + cityWeatherIcon + ".png");
+        // iconEl.classList = "mt-2";
+        // resultsContainerEl.appendChild(cityWeatherIconEl);
 
-        
         // Temp
 
         let tempForecastEL = document.createElement("li");
@@ -217,6 +218,7 @@ const displayCityForecast = function (data) {
         console.log(forecastTemp);
         tempForecastEL.innerHTML = "Temp: " + forecastTemp + "&#176F";
         forecastDetails.appendChild(tempForecastEL);
+
         // Humidity
 
         let humidityForecastEl = document.createElement("li")
@@ -237,11 +239,11 @@ const displayCityForecast = function (data) {
     }
 };
 
-
 clearBtn.addEventListener("click", function() {
 citySearchHistory = [];
 localStorage.clear();
-location.reload();
 });
+
+displaySearchHistory();
 
 cityFormEl.addEventListener("submit", formSubmitHandler);
