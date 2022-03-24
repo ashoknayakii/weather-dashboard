@@ -4,43 +4,46 @@
 
 //---Selectors---//
 
-var cityFormEl = document.querySelector("#city-form");
-var inputCityEl = document.querySelector("#input-city");
-var resultsContainerEl = document.querySelector("#result-container");
-var historyContainerEl = document.querySelector("#history-container");
+let cityFormEl = document.querySelector("#city-form");
+let inputCityEl = document.querySelector("#input-city");
+let resultsContainerEl = document.querySelector("#result-container");
+let historyContainerEl = document.querySelector("#history-container");
 let cityWeatherIconEl = document.querySelector("#city-weather-icon");
 // var cityNameEl = document.querySelector("#city-name");
 // var tempEl = document.querySelector("#temperatureF");
 // var humidity = document.querySelector("#humidity");
 // var windMPH = document.querySelector("#wind");
 // var uvIndex = document.querySelector("#uv-index");
-var forecastEl = document.querySelector("#fivedaycolumns");
-
-
-
+let forecastEl = document.querySelector("#fivedaycolumns");
+let citySearchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
+let clearBtn = document.querySelector("#clear-btn");
+console.log(citySearchHistory);
 
 //---Functions---//
 
 // Create formsubmithandler function//
 
-var formSubmitHandler = function (event) {
+const formSubmitHandler = function (event) {
     event.preventDefault();
     let cityName = inputCityEl.value.trim();
 
     if (cityName) {
         getCityInfo(cityName);
 
+        // Clear Past Content
+
+        resultsContainerEl.innerHTML = "";
+        forecastEl.innerHTML = "";
 
     } else {
         alert("Please enter a valid city name");
     }
 };
 
-
 // Create a getCityInfo function using a fetch from the open weather api then console log the response to check//
 
 
-var getCityInfo = function (cityName) {
+const getCityInfo = function (cityName) {
     console.log(cityName);
 
     var apiKey = `23063d416b2ee9cce627a00bf1093a71`
@@ -60,6 +63,8 @@ var getCityInfo = function (cityName) {
                                 response.json().then(function (data) {
                                     console.log(data);
                                     displayCityInfo(data);
+                                    saveCityName(cityName);
+                                    displaySearchHistory();
                                 })
                             }
                         })
@@ -74,8 +79,49 @@ var getCityInfo = function (cityName) {
 };
 
 
+// Save City to Local Storage
 
-var displayCityInfo = function (data) {
+const saveCityName = function (cityName) {
+
+    let duplicateCity = false;
+    for (let i = 0; i < citySearchHistory.length; i++) {
+        if(citySearchHistory[i] === cityName){
+            duplicateCity = true;
+            break;
+        }
+        
+    }
+    if(!duplicateCity) {
+        citySearchHistory.push(cityName);
+        localStorage.setItem("cityName", JSON.stringify(citySearchHistory));
+        console.log("cityName", citySearchHistory[i]);
+    }
+
+};
+
+const displaySearchHistory = function () {
+    historyContainerEl.innerHTML = "";
+
+    for (let i = 0; i < citySearchHistory.length; i++) {
+        
+        let searchHistoryEl = document.createElement("button");
+        searchHistoryEl.classList = "btn-secondary btn-block";
+        searchHistoryEl.setAttribute("value", citySearchHistory[i]);
+        searchHistoryEl.setAttribute("type", "text");
+        searchHistoryEl.textContent = citySearchHistory[i];
+        console.log("city button", searchHistoryEl.value);
+        searchHistoryEl.addEventListener("click", function(){
+            console.log("Search History Button Clicked!", searchHistoryEl.value);
+            selectedCity = this.value;
+            getCityInfo(selectedCity);
+            displayCityForecast(selectedCity)
+        });
+        historyContainerEl.appendChild(searchHistoryEl);
+    }
+
+}
+
+const displayCityInfo = function (data) {
 
     let cityName = inputCityEl.value.trim();
     inputCityEl.value = "";
@@ -104,7 +150,7 @@ var displayCityInfo = function (data) {
     resultsContainerEl.appendChild(cityHeader);
 
     let tempF = document.createElement("li");
-    let currentTemp = data.current.temp;
+    let currentTemp = Math.floor(1.8 * (data.current.temp - 273.15) + 32);
     console.log(currentTemp);
     tempF.innerHTML = "Temp: " + currentTemp + "&#176F";
     resultsContainerEl.appendChild(tempF);
@@ -132,136 +178,70 @@ var displayCityInfo = function (data) {
 };
 
 
-var displayCityForecast = function (data) {
+const displayCityForecast = function (data) {
 
     let dailyData = data.daily
     console.log(dailyData)
 
     for (let i = 1; i < 6; i++) {
 
-        let forecastID = data.daily[i].dt;
+        let forecastID = dailyData[i].dt;
         let forecastDate = new Date(forecastID * 1000);
         let forecastDay = forecastDate.getDate();
         let forecastMonth = forecastDate.getMonth() + 1;
         let forecastYear = forecastDate.getFullYear();
 
-
         // Create Elements to House 5 Day Forecast
  
-        let forecastEl = document.createElement("div");
         forecastEl.classList = "d-inline-flex flex-wrap";
 
-        let forecastCards = document.createElement("div");
-        forecastCards.classList = "card text-white bg-dark-blue m-2 p0";
+        let forecastCard = document.createElement("div");
+        forecastCard.classList = "card text-white bg-dark-blue m-2 p0";
 
         let forecastDetails = document.createElement("ul")
-        forecastDetails.classList = "unstyled list p-3"
+        forecastDetails.classList = "list-unstyled p-3"
 
         // Populate 5-day Forecast Cards
 
         let forecastCardDate = document.createElement("li")
         forecastCardDate.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
-        forecastCards.appendChild(forecastCardDate);
-
-
+        forecastDetails.appendChild(forecastCardDate);
         // Icon Element for Forecast Card
 
 
-
+        
         // Temp
 
-        let tempForecast = document.createElement("li");
-        let forecastTemp = data.daily[i].temp;
-        console.log(tempForecast);
-        tempF.innerHTML = "Temp: " + currentTemp + "&#176F";
-        forecastCards.appendChild(tempForecast);
-
-
+        let tempForecastEL = document.createElement("li");
+        let forecastTemp = Math.floor(1.8 * (dailyData[i].temp.day - 273.15) + 32);
+        console.log(forecastTemp);
+        tempForecastEL.innerHTML = "Temp: " + forecastTemp + "&#176F";
+        forecastDetails.appendChild(tempForecastEL);
         // Humidity
 
-        let humidityForecast = document.createElement("li")
-        let forecastHumidity = data.daily[i].humidity
-        console.log(humidityForecast);
-        humidity.innerHTML = "Humidity: " + currentHumidity + "%";
-        forecastCards.appendChild(humidityForecast);
+        let humidityForecastEl = document.createElement("li")
+        let forecastHumidity = dailyData[i].humidity
+        console.log(forecastHumidity);
+        humidityForecastEl.innerHTML = `Humidity:${forecastHumidity}%`;
+        forecastDetails.appendChild(humidityForecastEl);
 
         // Wind
 
-        let windForecast = document.createElement("li")
-        let forecastWind = data.daily[i].wind_speed
-        console.log(windForecast);
-        windMPH.innerHTML = "Wind: " + currentWind + "MPH";
-        forecastCards.appendChild(windForecast);
-
-
-
-
-
-
-
-
+        let windForecastEl = document.createElement("li")
+        let forecastWind = dailyData[i].wind_speed
+        console.log(forecastWind);
+        windForecastEl.innerHTML = "Wind: " + forecastWind + "MPH";
+        forecastDetails.appendChild(windForecastEl);
+        forecastCard.append(forecastDetails)
+        forecastEl.append(forecastCard)
     }
-
-
-
-
-
-
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// WHEN I view current weather conditions for that city
-// THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-
-
-
-
-
-
-
-
-// WHEN I view the UV index
-// THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-
-
-
-
-
-
-
-// WHEN I view future weather conditions for that city
-// THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
-
-
-
-
-
-// WHEN I click on a city in the search history
-
-
-
-
-// THEN I am again presented with current and future conditions for that city
-
-
-
-// Event Listeners //
+clearBtn.addEventListener("click", function() {
+citySearchHistory = [];
+localStorage.clear();
+location.reload();
+});
 
 cityFormEl.addEventListener("submit", formSubmitHandler);
