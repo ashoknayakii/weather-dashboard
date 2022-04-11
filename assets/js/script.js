@@ -139,7 +139,7 @@ const displayCityInfo = function (data) {
     console.log(cityWeatherIcon);
 
     let cityHeader = document.createElement("h3");
-    cityHeader.innerText = cityName + "( " + today + " )" 
+    cityHeader.innerText = cityName + "( " + today + " )"; 
     resultsContainerEl.appendChild(cityHeader);
 
     let tempF = document.createElement("li");
@@ -192,7 +192,7 @@ const displayCityForecast = function (data) {
         forecastEl.classList = "d-inline-flex flex-wrap";
 
         let forecastCard = document.createElement("div");
-        forecastCard.classList = "card text-white bg-dark-blue m-2 p0";
+        forecastCard.classList = "card text-white bg-dark-blue m-2 p-0";
 
         let forecastDetails = document.createElement("ul")
         forecastDetails.classList = "list-unstyled p-3"

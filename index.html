@@ -19,7 +19,7 @@
     </header>
     <main class="row">
         <!--Search City Section-->
-        <aside class="col-12 col-lg-3 flex-column m-3">
+        <aside class="column col-12 col-lg-3 flex-column m-3">
             <form id="city-form">
                 <h3 class="h3. Bootstrap heading font-weight-bold">Search for a City:</h3>
                 <input id="input-city" name="city-name" placeholder="Enter a city here"
@@ -35,18 +35,18 @@
             </div>
         </aside>
         <!--Search Result Container-->
-        <section class="container col-12 col-lg-9 flex-column m-3 border border-3 p-2">
-            <div id="result-container">
-                <h3></h3><img id="city-weather-icon">
-                <ul class="list-unstyled ml-3">
+        <section class="container col-lg-8 m-3 border border-3 p-2">
+            <div id="result-container" class="row flex-column align-items-start">
+                <h3><img id="city-weather-icon"></h3>
+                    <ul class="list-unstyled ml-3">
 
-                </ul>
+                    </ul>
             </div>
         </section>
         <!--5 day Forecast Section-->
-        <article id="fiveday-containers" class="d-flex justify-content-around flex-wrap">
+        <article id="fiveday-containers" class="container col-5">
             <h2>5-Day Forecast:</h2>
-            <div id="fivedaycolumns">
+            <div id="fivedaycolumns" class="row"> 
 
             </div>
         </article>
