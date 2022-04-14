@@ -7,6 +7,11 @@ header {
     background-image: linear-gradient(to left, black, blue);
 }
 
+#history-container {
+    margin: 20px;
+    border-top: solid 1px;
+}
+
 .bg-dark-blue{
     background-color: #33475A;
 }

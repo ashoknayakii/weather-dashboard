@@ -12,7 +12,6 @@ let cityWeatherIconEl = document.querySelector("#city-weather-icon");
 let forecastEl = document.querySelector("#fivedaycolumns");
 let citySearchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
 let clearBtn = document.querySelector("#clear-btn");
-console.log(citySearchHistory);
 
 //---Functions---//
 
@@ -27,7 +26,7 @@ const formSubmitHandler = function (event) {
         
         getCityInfo(cityName);
         
-        // Clear Past Content
+        
 
     } else {
         alert("Please enter a valid city name");
@@ -58,6 +57,7 @@ const getCityInfo = function (cityName) {
                                     console.log(data);
                                     displayCityInfo(data);
                                     saveCityName(cityName);
+                                    displaySearchHistory(cityName);
                                 })
                             }
                         })
@@ -93,18 +93,16 @@ const displaySearchHistory = function () {
     for (let i = 0; i < citySearchHistory.length; i++) {
         
         let searchHistoryEl = document.createElement("button");
-        searchHistoryEl.classList = "btn-secondary btn-block";
+        searchHistoryEl.classList = "btn btn-secondary btn-block";
         searchHistoryEl.setAttribute("value", citySearchHistory[i]);
         searchHistoryEl.setAttribute("type", "text");
         searchHistoryEl.textContent = citySearchHistory[i];
-        console.log("city button", searchHistoryEl.value);
         searchHistoryEl.addEventListener("click", function(){
             resultsContainerEl.innerHTML = "";
             forecastEl.innerHTML = "";
-            console.log("Search History Button Clicked!", searchHistoryEl.value);
-            selectedCity = this.value;
-            getCityInfo(selectedCity);
-            displayCityForecast(selectedCity)
+            savedCity = this.value;
+            getCityInfo(savedCity);
+            displayCityForecast(savedCity);
         });
         historyContainerEl.appendChild(searchHistoryEl);
     }
@@ -126,7 +124,7 @@ const displayCityInfo = function (data) {
     let today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
+    var yyyy = today.getFullYear(); 
 
     today = mm + '/' + dd + '/' + yyyy;
 
@@ -139,7 +137,7 @@ const displayCityInfo = function (data) {
     console.log(cityWeatherIcon);
 
     let cityHeader = document.createElement("h3");
-    cityHeader.innerText = cityName + "( " + today + " )"; 
+    cityHeader.innerHTML = cityName + "( " + today + " )"; 
     resultsContainerEl.appendChild(cityHeader);
 
     let tempF = document.createElement("li");
@@ -175,7 +173,6 @@ const displayCityInfo = function (data) {
 const displayCityForecast = function (data) {
 
     let dailyData = data.daily
-    console.log(dailyData)
 
     // For Loop that Starts on the following day Retrieved
 
@@ -188,7 +185,7 @@ const displayCityForecast = function (data) {
         let forecastYear = forecastDate.getFullYear();
 
         // Create Elements to House 5 Day Forecast
- 
+
         forecastEl.classList = "d-inline-flex flex-wrap";
 
         let forecastCard = document.createElement("div");
@@ -205,11 +202,12 @@ const displayCityForecast = function (data) {
 
         // Icon Element for Forecast Card
 
-        // let cityWeatherIcon = data.current.weather[0].icon;
-        // let iconEl = document.createElement("img");
-        // cityWeatherIconEl.setAttribute("src", "https://openweathermap.org/img/w/" + cityWeatherIcon + ".png");
-        // iconEl.classList = "mt-2";
-        // resultsContainerEl.appendChild(cityWeatherIconEl);
+        let forecastWeatherIcon = data.daily[i].weather[0].icon;
+        console.log(forecastWeatherIcon)
+        let forecastIconEl = document.createElement("img");
+        forecastIconEl.setAttribute("src", "https://openweathermap.org/img/w/" + forecastWeatherIcon + ".png");
+        forecastIconEl.classList = "mt-2";
+        forecastDetails.appendChild(forecastIconEl);
 
         // Temp
 
@@ -242,8 +240,9 @@ const displayCityForecast = function (data) {
 clearBtn.addEventListener("click", function() {
 citySearchHistory = [];
 localStorage.clear();
+location.reload();
 });
 
-displaySearchHistory();
+// displaySearchHistory();
 
 cityFormEl.addEventListener("submit", formSubmitHandler);
